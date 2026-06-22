@@ -1,7 +1,12 @@
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import Navbar from "../components/Navbar";
+import Sidebar from "../components/Sidebar";
+import HomeOverview from "../components/HomeOverview";
 function Dashboard()
 {
     const navigate = useNavigate();
+    const [sidebarOpen, setSidebarOpen] = useState(true);
     const logout=()=>{
         localStorage.removeItem("user");
         navigate('/');
@@ -14,23 +19,19 @@ function Dashboard()
         user = null;
     }
     return(
-        <div className="p-10">
-            <h1 className ="text-3xl font-bold">
-                DashBoard
-            </h1>
-
-            <h1>
-            Welcome {user?.username}
-            </h1>
-            <p>
-                Email:{user?.email}
-            </p>
-            <p>
-                Role:{user?.role}
-            </p>
-            <button onClick={logout} className="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
-                Logout
-            </button>
+        <div className="h-screen flex flex-col overflow-hidden">
+        <Navbar onToggleSidebar={() => setSidebarOpen((o) => !o)} />
+        <div className="flex flex-1 overflow-hidden">
+        <Sidebar open={sidebarOpen} />
+        <div className="flex-1 overflow-y-auto p-6 bg-white dark:bg-gray-950">
+            <div className="flex justify-end mb-2">
+                <button onClick={logout} className="px-3 py-1.5 text-sm bg-red-500 text-white rounded hover:bg-red-600">
+                    Logout
+                </button>
+            </div>
+            <HomeOverview username={user?.username || "User"} />
+        </div>
+        </div>
         </div>
     )
 }
